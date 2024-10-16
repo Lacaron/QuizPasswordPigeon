@@ -17,7 +17,7 @@ Welcome to the Password Game! This web application challenges users to create st
 
 2. Navigate to the project directory:
    ```bash
-   cd password-game
+   cd QuizPasswordPigeon
    ```
 
 3. Install the dependencies:
@@ -31,6 +31,28 @@ Welcome to the Password Game! This web application challenges users to create st
    ```
 
 5. Open your browser and go to `http://localhost`.
+
+### Using Docker
+
+1. Make sure you have [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/) installed.
+
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/Lacaron/QuizPasswordPigeon.git
+   ```
+
+3. Navigate to the project directory:
+   ```bash
+   cd QuizPasswordPigeon
+   ```
+
+4. Build and start the Docker containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+5. Open your browser and go to `http://localhost`.
+
 
 ## Usage
 
