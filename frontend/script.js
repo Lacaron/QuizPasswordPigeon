@@ -7,6 +7,12 @@ let gameState = {
     attempt: 0,
 };
 
+window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+    const confirmationMessage = 'Are you sure you want to leave? Your progress may be lost.';
+    return confirmationMessage;
+});
+
 // Phase 1: Splash Page with Leaderboard
 function showSplashPage() {
     document.getElementById('game-container').innerHTML = `
@@ -17,7 +23,7 @@ function showSplashPage() {
             
             <div class="bg-white border rounded-lg shadow-lg p-4 mb-6 w-11/12 max-w-md h-1/2 overflow-auto">
                 <h2 class="text-4xl font-bold mb-4 text-center">Classement</h2>
-                <ul class="space-y-2" id="leaderboard">
+                <ul class="space-y-2 max-h-64 min-h-64 overflow-y-auto" id="leaderboard">
                     <!-- Placeholder for leaderboard content -->
                 </ul>
             </div>
