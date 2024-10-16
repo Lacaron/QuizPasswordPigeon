@@ -166,7 +166,7 @@ async function scorePassword(password, rememberedPassword) {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
-    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>-_ ]/.test(password);
 
     if (hasUpperCase) {
         score += 15 * (Math.random() + 1);
