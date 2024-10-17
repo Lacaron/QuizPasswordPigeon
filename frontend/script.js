@@ -9,7 +9,7 @@ let gameState = {
 
 window.addEventListener('beforeunload', (event) => {
     event.preventDefault();
-    const confirmationMessage = 'Are you sure you want to leave? Your progress may be lost.';
+    const confirmationMessage = 'Êtes-vous sûr de vouloir partir ? Vos progrès pourraient être perdus.';
     return confirmationMessage;
 });
 
@@ -126,7 +126,7 @@ async function submitLogin() {
         gameState.score = result.score;
         gameState.goodreasons = result.goodreasons;
         gameState.badreasons = result.badreasons;
-        alert("Login failed, you've used both attempts!");
+        alert("L'authentification a échoué, vous avez utilisé les deux tentatives !");
         showScorePage();
         return;
     }
@@ -140,7 +140,7 @@ async function submitLogin() {
         showScorePage();
     } else {
         gameState.attempt++;
-        alert('Incorrect password. Try again!');
+        alert('Mot de passe incorrect. Réessayez !');
     }
 }
 
@@ -152,14 +152,14 @@ async function scorePassword(password, rememberedPassword) {
     // Length check (the longer the better)
     if (password.length >= 12) {
         score += 20 * password.length;  // Multiply by length to differentiate more
-        goodreasons.push('Length of password is sufficient (≥ 12 characters).');
+        goodreasons.push('La longueur du mot de passe est suffisante (≥ 12 caractères).');
     } else {
-        badreasons.push('Password length is insufficient (< 12 characters).');
+        badreasons.push('La longueur du mot de passe est insuffisante (< 12 caractères).');
     }
 
     if (password.length >= 16) {
         score += 30;  // Bonus for extra length
-        goodreasons.push('Bonus for extra length (≥ 16 characters).');
+        goodreasons.push('Bonus pour la longueur supplémentaire (≥ 16 caractères).');
     }
 
     // Check for uppercase, lowercase, numbers, and special characters
@@ -170,40 +170,40 @@ async function scorePassword(password, rememberedPassword) {
 
     if (hasUpperCase) {
         score += 15 * (Math.random() + 1);
-        goodreasons.push('Contains uppercase letters.');
+        goodreasons.push('Contient des lettres majuscules.');
     } else {
-        badreasons.push('Missing uppercase letters.');
+        badreasons.push('Absence de lettres majuscules.');
     }
 
     if (hasLowerCase) {
         score += 15 * (Math.random() + 1);
-        goodreasons.push('Contains lowercase letters.');
+        goodreasons.push('Contient des lettres minuscules.');
     } else {
-        badreasons.push('Missing lowercase letters.');
+        badreasons.push('Absence de lettres minuscules.');
     }
 
     if (hasNumbers) {
         score += 15 * (Math.random() + 1);
-        goodreasons.push('Contains numbers.');
+        goodreasons.push('Contient des chiffres.');
     } else {
-        badreasons.push('Missing numbers.');
+        badreasons.push('Absence de chiffres.');
     }
 
     if (hasSpecialChars) {
         score += 15 * (Math.random() + 1);
-        goodreasons.push('Contains special characters.');
+        goodreasons.push('Contient des caractères spéciaux.');
     } else {
-        badreasons.push('Missing special characters.');
+        badreasons.push('Absence de caractères spéciaux.');
     }
 
     // Penalize for common patterns or repetition
     const patterns = /(.)\1\1/;  // Same character repeated 3+ times
     if (!patterns.test(password)) {
         score += 10;  // No repeating characters
-        goodreasons.push('No repeating characters.');
+        goodreasons.push('Pas de caractères répétés.');
     } else {
         score -= 10;  // Penalize if patterns exist
-        badreasons.push('Contains repeating characters.');
+        badreasons.push('Contient des caractères répétés.');
     }
 
     // Check entropy (variation in character types)
@@ -212,29 +212,29 @@ async function scorePassword(password, rememberedPassword) {
     // Check the number of unique characters and adjust the score and reasons accordingly
     if (uniqueChars >= 10) {
         score += 15 * uniqueChars; // Higher unique characters = higher score
-        goodreasons.push(`Unique characters: ${uniqueChars}. Great variety!`);
+        goodreasons.push(`Caractères uniques: ${uniqueChars}. Grande variété !`);
     } else {
         score += 5 * uniqueChars; // Lower score for fewer unique characters
-        badreasons.push(`Unique characters: ${uniqueChars}. Try using more different characters.`);
+        badreasons.push(`Caractères uniques: ${uniqueChars}. Essayez d'utiliser plus de caractères différents.`);
     }
 
     // Check if the password has been breached
     const breachPenalty = await checkBreach(password);
     if (breachPenalty) {
         score = Math.min(score, 50); // Deduct a significant penalty for breached passwords
-        badreasons.push('Password has been breached and is unsafe.');
+        badreasons.push('Le mot de passe a été compromis et n\'est pas sûr.');
     }
     else {
-        goodreasons.push('Password has not been breached and is safe.');
+        goodreasons.push('Le mot de passe n\'a pas été compromis et est sûr.');
     }
 
     // Emphasize memory factor
     if (rememberedPassword) {
         score += 10;
-        goodreasons.push('User remembers the password.');
+        goodreasons.push('L\'utilisateur se souvient du mot de passe.');
     } else {
         score = Math.min(score, 100);  // Large penalty if they won't remember
-        badreasons.push('User does not remember the password, leading to a penalty.');
+        badreasons.push('L\'utilisateur ne se souvient pas du mot de passe, ce qui entraîne une pénalité.');
     }
 
     // Round score
