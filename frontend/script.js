@@ -298,9 +298,9 @@ function showScorePage() {
             <h1 class="text-4xl font-bold mb-4">${gameState.score}</h1>
             <h2 class="text-xl font-semibold mb-2">Raisons derrière Votre Score:</h2>
             <ul class="list-disc list-inside mb-4">
-                ${gameState.goodreasons.map(goodreasons => `<li class="text-green-600">${goodreasons}</li>`).join('')}
+                ${gameState.goodreasons.map(goodreasons => `<li class="text-green-600 text-xl text-base/loose">${goodreasons}</li>`).join('')}
 
-                ${gameState.badreasons.map(badreasons => `<li class="text-red-600">${badreasons}</li>`).join('')}
+                ${gameState.badreasons.map(badreasons => `<li class="text-red-600 text-xl text-base/loose font-bold">${badreasons}</li>`).join('')}
             </ul>
             <button onclick="finishGame()" class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition">
                 FIN
