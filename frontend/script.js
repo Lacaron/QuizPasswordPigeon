@@ -15,22 +15,15 @@ window.addEventListener('beforeunload', (event) => {
 
 // Phase 1: Splash Page with Leaderboard
 function showSplashPage() {
-    document.getElementById('game-container').innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 class="text-4xl font-bold mb-6">Bienvenue</h1>
-            <h1 class="text-4xl font-bold mb-6">Au Jeu de Mot de Passe!</h1>
-
-            
-            <div class="bg-white border rounded-lg shadow-lg p-4 mb-6 w-11/12 max-w-md h-1/2 overflow-auto">
-                <h2 class="text-4xl font-bold mb-4 text-center">Classement</h2>
-                <ul class="space-y-2 max-h-64 min-h-64 overflow-y-auto" id="leaderboard">
+    const gameContainer = document.getElementById('game-container');
+    gameContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center min-h-full bg-white bg-opacity-80 rounded-lg shadow-lg p-8">
+            <div class="w-full max-w-md mb-6">
+                <h2 class="text-4xl font-bold mb-4 text-center" style="color: rgb(22, 10, 58);">Classement</h2>
+                <ul class="space-y-2 max-h-64 overflow-y-auto" id="leaderboard">
                     <!-- Placeholder for leaderboard content -->
                 </ul>
             </div>
-
-            <button id="start-button" class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition" onclick="startGame()">
-                Commencer le Jeu
-            </button>
         </div>
     `;
     fetchLeaderboard();
@@ -63,10 +56,11 @@ function startGame() {
 function showPasswordResetPage() {
     document.getElementById('game-container').innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 class="text-2xl font-semibold mb-4">Réinitialiser Votre Mot de Passe</h2>
-            <input type="password" id="password" placeholder="Entrez votre mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
+            <h2 class="text-2xl font-semibold mb-4">Réinitialiser votre mot de passe</h2>
+            <p class="mb-4 text-center">Imaginez que vous devez réinitialiser un nouveau mot de passe pour votre compte fictif professionnel. Choisissez un mot de passe que vous considérez sécurisé.</p>
+            <input type="password" id="password" placeholder="Entrez votre nouveau mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
             <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitPassword()">
-                Soumettre
+                Valider mon mot de passe
             </button>
         </div>
     `;
@@ -105,14 +99,13 @@ function showTextBoxPage() {
 // Phase 4: Fake Login Page
 function showLoginPage() {
     document.getElementById('game-container').innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 class="text-2xl font-semibold mb-4">Bon matin!</h2>
-            <input type="text" id="username" placeholder="Nom d'utilisateur" class="border rounded-lg p-2 mb-2 w-64" />
-            <input type="password" id="login-password" placeholder="Mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
-            <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitLogin()">
-                Login
-            </button>
-        </div>
+    <h2 class="text-2xl font-semibold mb-4">Connexion à votre compte</h2>
+    <p class="mb-4 text-center">Maintenant, essayez de vous connecter avec le mot de passe que vous venez de créer et indiquez votre mail comme Nom d'utilisateur pour le classement.</p>
+    <input type="text" id="username" placeholder="Nom d'utilisateur" class="border rounded-lg p-2 mb-2 w-64" />
+    <input type="password" id="login-password" placeholder="Mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
+    <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitLogin()">
+        Se connecter
+    </button>
     `;
 }
 
@@ -292,18 +285,25 @@ async function checkBreach(password) {
 
 // Phase 5: Score Page
 function showScorePage() {
+    const breachedPasswordMessage = 'Le mot de passe a été compromis et n\'est pas sûr.';
     document.getElementById('game-container').innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 class="text-4xl font-bold mb-4">Votre Score:</h1>
-            <h1 class="text-4xl font-bold mb-4">${gameState.score}</h1>
-            <h2 class="text-xl font-semibold mb-2">Raisons derrière Votre Score:</h2>
-            <ul class="list-disc list-inside mb-4">
-                ${gameState.goodreasons.map(goodreasons => `<li class="text-green-600 text-xl text-base/loose">${goodreasons}</li>`).join('')}
 
-                ${gameState.badreasons.map(badreasons => `<li class="text-red-600 text-xl text-base/loose font-bold">${badreasons}</li>`).join('')}
+        <h1 class="text-4xl font-bold mb-4">Résultat de votre défi</h1>
+        <h2 class="text-3xl font-semibold mb-4">Votre score : ${gameState.score}</h2>
+        <h3 class="text-xl font-semibold mb-2">Analyse de votre mot de passe :</h3>
+         <ul class="list-disc list-inside mb-4">
+                ${gameState.badreasons.map(badReason => 
+                    badReason === breachedPasswordMessage
+                        ? `<li class="text-red-600 text-xl text-base/loose font-bold">${badReason}</li>`
+                        : `<li class="text-red-600 text-xl text-base/loose">${badReason}</li>`
+                ).join('')}
+                ${gameState.goodreasons.map(goodReason => 
+                    `<li class="text-green-600 text-xl text-base/loose">${goodReason}</li>`
+                ).join('')}
             </ul>
             <button onclick="finishGame()" class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition">
-                FIN
+                Terminer le défi
             </button>
         </div>
     `;
