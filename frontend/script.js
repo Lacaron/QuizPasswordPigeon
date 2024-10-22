@@ -8,11 +8,11 @@ let gameState = {
     attempt: 0,
 };
 
-// window.addEventListener('beforeunload', (event) => {
-//     event.preventDefault();
-//     const confirmationMessage = 'Êtes-vous sûr de vouloir partir ? Vos progrès pourraient être perdus.';
-//     return confirmationMessage;
-// });
+window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+    const confirmationMessage = 'Êtes-vous sûr de vouloir partir ? Vos progrès pourraient être perdus.';
+    return confirmationMessage;
+});
 
 // Phase 1: Splash Page with Leaderboard
 function showSplashPage() {
