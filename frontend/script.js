@@ -187,7 +187,7 @@ function showMemoryCheckPopup() {
 
 function nextMemoryCheckPopup() {
     closeMemoryCheckPopup();
-    showTextBoxPage();
+    showFunFactPage();
 }
 
 function closeMemoryCheckPopup() {
@@ -198,24 +198,34 @@ function closeMemoryCheckPopup() {
 }
 
 // Phase 3: Text Box with Paragraph
-function showTextBoxPage() {
-    document.getElementById('game-container').innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 class="text-2xl font-semibold mb-4">Fait amusant!</h2>
-            <p class="text-center mb-4 max-w-lg mx-auto">
-                Saviez-vous qu'en 2023, plus de 1 000 000 de données ont été exposées lors de violations de sécurité, 
-                ce qui représente une augmentation de 50 % par rapport à l'année précédente ? 
-                Protégez votre mot de passe pour éviter d'être le prochain !
-            </p>
-            <!-- https://www.getastra.com/blog/security-audit/data-breach-statistics/ -->
-            <img src="/resources/funfact.png" alt="2 millions de personnes affecte en 2022" class="mx-auto mb-4 w-64 h-auto">
-
-            <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="showLoginPage()">
-                Suivant
-            </button>
-        </div>
-    `;
+function showFunFactPage() {
+    // Fetch the content of the fun fact JSON file
+    fetch('./resources/funfact.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('game-container').innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+                    <h2 class="text-2xl font-semibold mb-4">${data.title}</h2>
+                    <p class="text-center mb-4 max-w-lg mx-auto">
+                        ${data.content}
+                    </p>
+                    <img src="${data.image}" alt="Fun Fact" class="mx-auto mb-4 w-64 h-auto">
+                    <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="showLoginPage()">
+                        Suivant
+                    </button>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
+
 
 // Phase 4: Fake Login Page
 function showLoginPage() {
@@ -253,7 +263,7 @@ async function submitLogin() {
         return; // Exit the function if the username is too long
     }
 
-    
+
     if (loginPassword.trim() === "") {
         showBlockingAlert("Erreur de Connexion", "Veuillez entrer un mot de passe valide avant de continuer.")
         return;
