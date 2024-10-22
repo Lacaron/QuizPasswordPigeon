@@ -6,6 +6,5 @@ services:
       - "80:80"
     volumes:
       - ./data:/app/data
-      - ./resource:/app/frontend/resources
     environment:
       NODE_ENV: development
