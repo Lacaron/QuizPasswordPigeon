@@ -120,7 +120,7 @@ function submitPassword() {
     const password = document.getElementById('password').value;
 
     if (password.trim() === "") {
-        showBlockingAlert("Veuillez entrer un mot de passe valide avant de continuer.")
+        showBlockingAlert("Erreur de Connexion", "Veuillez entrer un mot de passe valide avant de continuer.")
         return;
     }
 
@@ -129,7 +129,7 @@ function submitPassword() {
     showMemoryCheckPopup()
 }
 
-function showBlockingAlert(message) {
+function showBlockingAlert(title, message) {
     document.body.innerHTML += `
     <div id="alert" class="fixed top-0 left-0 right-0 flex items-center justify-center z-50 p-4">
         <div role="alert" class="rounded border-s-4 border-red-500 bg-red-50 p-4 w-full max-w-md">
@@ -142,7 +142,7 @@ function showBlockingAlert(message) {
                     />
                 </svg>
 
-                <strong class="block font-medium">Something went wrong</strong>
+                <strong class="block font-medium">${title}</strong>
             </div>
 
             <p class="mt-2 text-sm text-red-700">
@@ -240,16 +240,22 @@ function showLoginPage() {
 
 async function submitLogin() {
     const username = document.getElementById('username').value;
+    const loginPassword = document.getElementById('login-password').value;
+    const maxUsernameLength = 110;
 
     if (username.trim() === "") {
-        showBlockingAlert("Veuillez entrer un nom d'utilisateur avant de continuer.")
+        showBlockingAlert("Erreur de Connexion", "Veuillez entrer un nom d'utilisateur avant de continuer.")
         return;
     }
 
-    const loginPassword = document.getElementById('login-password').value;
+    if (username.length > maxUsernameLength) {
+        showBlockingAlert("Erreur de Connexion", `Le nom d'utilisateur ne doit pas dépasser ${maxUsernameLength} caractères.`);
+        return; // Exit the function if the username is too long
+    }
+
     
     if (loginPassword.trim() === "") {
-        showBlockingAlert("Veuillez entrer un mot de passe valide avant de continuer.")
+        showBlockingAlert("Erreur de Connexion", "Veuillez entrer un mot de passe valide avant de continuer.")
         return;
     }
 
