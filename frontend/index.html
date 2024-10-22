@@ -4,17 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
+    <title>Jeu du Mot de Passe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <header class="fixed top-0 left-0 w-full border-b border-gray-200 bg-gray-50 bg-cover bg-center z-50"
+    style="background-image: url('/resources/header-image.png')">
+        <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+            <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">
+                        Défi du Mot de Passe Sécurisé
+                    </h1>
+
+                    <p class="mt-1.5 text-sm text-gray-500">
+                        Testez vos compétences en créant un mot de passe fort et
+                        mémorisable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div id="game-container">
         <!-- The game content will go here -->
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 

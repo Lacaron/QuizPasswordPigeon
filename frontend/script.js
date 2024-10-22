@@ -7,11 +7,11 @@ let gameState = {
     attempt: 0,
 };
 
-window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
-    const confirmationMessage = 'Êtes-vous sûr de vouloir partir ? Vos progrès pourraient être perdus.';
-    return confirmationMessage;
-});
+// window.addEventListener('beforeunload', (event) => {
+//     event.preventDefault();
+//     const confirmationMessage = 'Êtes-vous sûr de vouloir partir ? Vos progrès pourraient être perdus.';
+//     return confirmationMessage;
+// });
 
 // Phase 1: Splash Page with Leaderboard
 function showSplashPage() {
@@ -33,6 +33,7 @@ function showSplashPage() {
             </button>
         </div>
     `;
+
     fetchLeaderboard();
 }
 
@@ -62,24 +63,137 @@ function startGame() {
 // Phase 2: Fake Password Reset
 function showPasswordResetPage() {
     document.getElementById('game-container').innerHTML = `
-        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 class="text-2xl font-semibold mb-4">Réinitialiser Votre Mot de Passe</h2>
-            <input type="password" id="password" placeholder="Entrez votre mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
-            <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitPassword()">
-                Soumettre
-            </button>
+    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <h2 class="text-2xl font-semibold mb-4">Réinitialiser votre mot de passe</h2>
+            <p class="mb-4 text-center">
+                Imaginez que vous devez créer un nouveau mot de passe pour votre compte professionnel fictif.
+            </p>
+            <p class="mb-4 text-center">
+                Sélectionnez un mot de passe que vous jugez à la fois sécurisé et facile à retenir.
+            </p>
+        <input type="password" id="password" placeholder="Entrez votre nouveau mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
+        <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitPassword()">
+            Valider mon mot de passe
+        </button>
+    </div>
+    `;
+
+    showInstructions();
+}
+
+function showInstructions() {
+    document.body.innerHTML += `
+        <div id="instructions" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="rounded-lg bg-white p-8 shadow-2xl max-w-2xl w-full">
+                <h2 class="text-lg font-bold">À propos du jeu</h2>
+
+                <p class="mt-2 text-sm text-gray-500">
+                    <p>Ce défi vise à évaluer votre capacité à créer des mots de passe sécurisés. Voici comment ça fonctionne :</p>
+                    <ol class="list-decimal list-inside mt-2">
+                        <li>On vous demandera de réinitialiser votre mot de passe pour un compte fictif.</li>
+                        <li>Créez un mot de passe que vous estimez à la fois sécurisé et facile à retenir.</li>
+                        <li>Vous gagnerez des points en fonction de la sécurité de votre mot de passe.</li>
+                        <li>N'oubliez pas : vous devez pouvoir vous souvenir de ce mot de passe !</li>
+                    </ol>
+                </p>
+
+
+                <div class="mt-4 flex gap-2">
+                    <button type="button" class="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onclick="closeInstructions()">
+                        C'est bon!
+                    </button>
+                </div>
+            </div>
         </div>
     `;
 }
 
+function closeInstructions() {
+    const popup = document.getElementById("instructions");
+    if (popup) {
+        popup.remove();
+    }
+}
+
 function submitPassword() {
     const password = document.getElementById('password').value;
-    gameState.password = password;
 
-    if (confirm('Êtes-vous certain que vous allez vous en rappeler, cela semble assez complexe?')) {
-        showTextBoxPage();
+    if (password.trim() === "") {
+        showBlockingAlert("Veuillez entrer un mot de passe valide avant de continuer.")
+        return;
     }
 
+    gameState.password = password;
+
+    showMemoryCheckPopup()
+}
+
+function showBlockingAlert(message) {
+    document.body.innerHTML += `
+    <div id="alert" class="fixed top-0 left-0 right-0 flex items-center justify-center z-50 p-4">
+        <div role="alert" class="rounded border-s-4 border-red-500 bg-red-50 p-4 w-full max-w-md">
+            <div class="flex items-center gap-2 text-red-800">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                    <path
+                        fill-rule="evenodd"
+                        d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+
+                <strong class="block font-medium">Something went wrong</strong>
+            </div>
+
+            <p class="mt-2 text-sm text-red-700">
+                ${message}
+            </p>
+        </div>
+    </div>
+    `;
+
+    setTimeout(() => {
+        const alertElement = document.getElementById("alert");
+        if (alertElement) {
+            alertElement.remove();
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+}
+
+
+function showMemoryCheckPopup() {
+    document.body.innerHTML += `
+        <div id="memory-check" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="rounded-lg bg-white p-8 shadow-2xl max-w-2xl w-full">
+                <h2 class="text-lg font-bold">Êtes-vous sûr de pouvoir vous en rappeler ?</h2>
+
+                <p class="mt-2 text-sm text-gray-500">
+                    Cela semble assez complexe. Assurez-vous de choisir un mot de passe que vous pourrez mémoriser facilement pour éviter d'être bloqué lors de votre prochaine connexion.
+                </p>
+
+                <div class="mt-4 flex gap-2">
+                    <button type="button" class="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onclick="nextMemoryCheckPopup()">
+                    Suivant
+                    </button>
+
+                    <button type="button" class="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onclick="closeMemoryCheckPopup()">
+                    Rester
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function nextMemoryCheckPopup() {
+    closeMemoryCheckPopup();
+    showTextBoxPage();
+}
+
+function closeMemoryCheckPopup() {
+    const popup = document.getElementById("memory-check");
+    if (popup) {
+        popup.remove();
+    }
 }
 
 // Phase 3: Text Box with Paragraph
@@ -106,11 +220,18 @@ function showTextBoxPage() {
 function showLoginPage() {
     document.getElementById('game-container').innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 class="text-2xl font-semibold mb-4">Bon matin!</h2>
+            <h2 class="text-2xl font-semibold mb-4">Connexion à votre compte</h2>
+            <p class="mb-4 text-center">
+                Maintenant, essayez de vous connecter en utilisant le mot de passe que vous venez de créer.
+            </p>
+            <p class="mb-4 text-center">
+                Pour le classement, veuillez utiliser votre adresse e-mail comme nom d'utilisateur.
+            </p>
+
             <input type="text" id="username" placeholder="Nom d'utilisateur" class="border rounded-lg p-2 mb-2 w-64" />
             <input type="password" id="login-password" placeholder="Mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
             <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitLogin()">
-                Login
+                Se connecter
             </button>
         </div>
     `;
@@ -118,7 +239,18 @@ function showLoginPage() {
 
 async function submitLogin() {
     const username = document.getElementById('username').value;
+
+    if (username.trim() === "") {
+        showBlockingAlert("Veuillez entrer un nom d'utilisateur avant de continuer.")
+        return;
+    }
+
     const loginPassword = document.getElementById('login-password').value;
+    
+    if (loginPassword.trim() === "") {
+        showBlockingAlert("Veuillez entrer un mot de passe valide avant de continuer.")
+        return;
+    }
 
     if (gameState.attempt >= 1 && loginPassword !== gameState.password) {
         gameState.username = username;
@@ -249,8 +381,6 @@ async function scorePassword(password, rememberedPassword) {
 }
 
 async function checkBreach(password) {
-
-
     // Hash the password using SHA-1
     const hash = CryptoJS.SHA1(password).toString();
 
@@ -294,19 +424,20 @@ async function checkBreach(password) {
 function showScorePage() {
     document.getElementById('game-container').innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 class="text-4xl font-bold mb-4">Votre Score:</h1>
-            <h1 class="text-4xl font-bold mb-4">${gameState.score}</h1>
-            <h2 class="text-xl font-semibold mb-2">Raisons derrière Votre Score:</h2>
+            <h1 class="text-4xl font-bold mb-4">Votre Score : ${gameState.score}</h1>
+            <h2 class="text-xl font-semibold mb-2">Analyse de votre mot de passe :</h2>
             <ul class="list-disc list-inside mb-4">
                 ${gameState.goodreasons.map(goodreasons => `<li class="text-green-600 text-xl text-base/loose">${goodreasons}</li>`).join('')}
 
                 ${gameState.badreasons.map(badreasons => `<li class="text-red-600 text-xl text-base/loose font-bold">${badreasons}</li>`).join('')}
             </ul>
             <button onclick="finishGame()" class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition">
-                FIN
+                Terminer le défi
             </button>
         </div>
     `;
+
+    showBreachPasswordMessage();
 
     // Send score to API
     fetch('/api/board/add', {
@@ -319,6 +450,38 @@ function showScorePage() {
             score: gameState.score,
         }),
     });
+}
+
+function showBreachPasswordMessage() {
+    document.body.innerHTML += `
+    <div id="breach" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="rounded-lg bg-white p-8 shadow-2xl max-w-2xl w-full">
+            <h2 class="text-lg font-bold">Attention ! Votre mot de passe a été compromis</h2>
+
+            <p class="mt-2 text-sm text-gray-500">
+                Il a été signalé que votre mot de passe a été exposé lors d'une violation de données. 
+                Utiliser un mot de passe compromis peut entraîner un accès non autorisé à votre compte et à vos informations personnelles.
+            </p>
+
+            <p class="mt-2 text-sm text-gray-500">
+                Nous vous recommandons de ne pas utiliser ce mot de passe et d'utiliser un mot de passe unique et complexe pour chaque compte.
+            </p>
+
+            <div class="mt-4 flex gap-2">
+                <button type="button" class="rounded bg-red-50 px-4 py-2 text-sm font-medium text-red-600" onclick="closeBreachPasswordMessage()">
+                    D'accord
+                </button>
+            </div>
+        </div>
+    </div>
+`;
+}
+
+function closeBreachPasswordMessage() {
+    const popup = document.getElementById("breach");
+    if (popup) {
+        popup.remove();
+    }
 }
 
 function finishGame() {
