@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Initialize the SQLite database (or create it if it doesn't exist)
-const db = new sqlite3.Database('./leaderboard.db', (err) => {
+const db = new sqlite3.Database('../data/leaderboard.db', (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
