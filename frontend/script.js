@@ -290,7 +290,7 @@ async function submitLogin() {
         showScorePage();
     } else {
         gameState.attempt++;
-        alert('Mot de passe incorrect. Réessayez !');
+        showBlockingAlert("Erreur de Connexion", "Mot de passe incorrect. Réessayez !")
     }
 }
 
