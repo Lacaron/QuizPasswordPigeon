@@ -3,6 +3,7 @@ let gameState = {
     password: '',
     goodreasons: '',
     badreasons: '',
+    passwordBreached: false,
     score: 0,
     attempt: 0,
 };
@@ -269,6 +270,7 @@ async function submitLogin() {
         gameState.score = result.score;
         gameState.goodreasons = result.goodreasons;
         gameState.badreasons = result.badreasons;
+        gameState.passwordBreached = result.passwordBreached;
         showScorePage();
     } else {
         gameState.attempt++;
@@ -280,6 +282,7 @@ async function scorePassword(password, rememberedPassword) {
     let score = 0;
     const goodreasons = [];  // Array to hold reasons for the score
     const badreasons = [];  // Array to hold reasons for the score
+    let passwordBreached = false;
 
     // Length check (the longer the better)
     if (password.length >= 12) {
@@ -355,6 +358,7 @@ async function scorePassword(password, rememberedPassword) {
     if (breachPenalty) {
         score = Math.min(score, 50); // Deduct a significant penalty for breached passwords
         badreasons.push('Le mot de passe a été compromis et n\'est pas sûr.');
+        passwordBreached = true;
     }
     else {
         goodreasons.push('Le mot de passe n\'a pas été compromis et est sûr.');
@@ -376,7 +380,8 @@ async function scorePassword(password, rememberedPassword) {
     return {
         score: score,
         goodreasons: goodreasons,
-        badreasons: badreasons
+        badreasons: badreasons,
+        passwordBreached: passwordBreached
     };
 }
 
@@ -437,7 +442,9 @@ function showScorePage() {
         </div>
     `;
 
-    showBreachPasswordMessage();
+    if (gameState.passwordBreached) {
+        showBreachPasswordMessage();
+    }
 
     // Send score to API
     fetch('/api/board/add', {
