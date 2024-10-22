@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
@@ -11,8 +12,16 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+const dataDir = './data';
+
+// Check if the data directory exists
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    console.log('Data directory created.');
+}
+
 // Initialize the SQLite database (or create it if it doesn't exist)
-const db = new sqlite3.Database('./data/leaderboard.db', (err) => {
+const db = new sqlite3.Database(path.join(dataDir, 'leaderboard.db'), (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
