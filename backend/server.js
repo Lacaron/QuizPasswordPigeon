@@ -85,7 +85,7 @@ app.post('/api/board/add', (req, res) => {
 });
 
 // Clear leaderboard (optional, for reset purposes)
-app.post('/api/board/reset', (req, res) => {
+app.get('/api/board/reset/4hxz8auhbj9kx3a4jtad5m25fytpmjwsvyq2ssttd4xcyye94xm5z5xvk5eac7x5gpxcphn39zicah6hq5szitkimcu8daxd9vxvypsd5mp8fun3v8gk5t2rq3iani87', (req, res) => {
     db.run('DELETE FROM leaderboard', (err) => {
         if (err) {
             res.status(500).json({ message: 'Error resetting leaderboard' });
