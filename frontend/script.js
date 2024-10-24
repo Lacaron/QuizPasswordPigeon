@@ -50,7 +50,7 @@ function fetchLeaderboard() {
 
             if (leaderboardHtml == '') {
                 leaderboardHtml += `<li class="text-center">Aucun participant pour le moment.</li>`;
-                leaderboardHtml += `<li class="text-center">Soyez le premier à jouer !</li>`;
+                leaderboardHtml += `<li class="text-center">Soyez le premier à jouer!</li>`;
             }
 
             document.getElementById('leaderboard').innerHTML = leaderboardHtml;
@@ -72,7 +72,7 @@ function showPasswordResetPage() {
             <p class="mb-4 text-center">
                 Sélectionnez un mot de passe que vous jugez à la fois sécurisé et facile à retenir.
             </p>
-        <input type="password" id="password" placeholder="Entrez votre nouveau mot de passe" class="border rounded-lg p-2 mb-4 w-64" />
+        <input type="password" id="password" placeholder="Entrez votre nouveau mot de passe" class="border rounded-lg p-2 mb-4 w-72" />
         <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition" onclick="submitPassword()">
             Valider mon mot de passe
         </button>
@@ -91,10 +91,10 @@ function showInstructions() {
                 <p class="mt-2 text-sm text-gray-500">
                     <p>Ce défi vise à évaluer votre capacité à créer des mots de passe sécurisés. Voici comment ça fonctionne :</p>
                     <ol class="list-decimal list-inside mt-2">
-                        <li>On vous demandera de réinitialiser votre mot de passe pour un compte fictif.</li>
-                        <li>Créez un mot de passe que vous estimez à la fois sécurisé et facile à retenir.</li>
-                        <li>Vous gagnerez des points en fonction de la sécurité de votre mot de passe.</li>
-                        <li>N'oubliez pas : vous devez pouvoir vous souvenir de ce mot de passe !</li>
+                    <li>Vous devrez réinitialiser votre mot de passe pour un compte fictif.</li>
+                    <li>Vous devrez créer un mot de passe à la fois sécurisé et mémorisable.</li>
+                    <li>Vous accumulerez des points selon la sécurité de votre mot de passe.</li>
+                    <li>Vous devrez retenir ce mot de passe pour la suite de l'exercice.</li>
                     </ol>
                 </p>
 
@@ -126,7 +126,7 @@ function submitPassword() {
 
     gameState.password = password;
 
-    showMemoryCheckPopup()
+    showMemoryCheckPopup(password)
 }
 
 function showBlockingAlert(title, message) {
@@ -161,8 +161,32 @@ function showBlockingAlert(title, message) {
 }
 
 
-function showMemoryCheckPopup() {
-    document.body.innerHTML += `
+function showMemoryCheckPopup(password) {
+
+    if (password.length < 6) {
+        document.body.innerHTML += `
+        <div id="memory-check" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="rounded-lg bg-white p-8 shadow-2xl max-w-2xl w-full">
+                <h2 class="text-lg font-bold">Êtes-vous sûr de pouvoir vous en rappeler ?</h2>
+
+                <p class="mt-2 text-sm text-gray-500">
+                    Cela semble assez facile. Assurez-vous de choisir un mot de passe complexe que vous pourrez mémoriser facilement pour éviter d'être bloqué lors de votre prochaine connexion.
+                </p>
+
+                <div class="mt-4 flex gap-2">
+                    <button type="button" class="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600" onclick="nextMemoryCheckPopup()">
+                    Suivant
+                    </button>
+
+                    <button type="button" class="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600" onclick="closeMemoryCheckPopup()">
+                    Rester
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    } else {
+        document.body.innerHTML += `
         <div id="memory-check" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="rounded-lg bg-white p-8 shadow-2xl max-w-2xl w-full">
                 <h2 class="text-lg font-bold">Êtes-vous sûr de pouvoir vous en rappeler ?</h2>
@@ -183,6 +207,8 @@ function showMemoryCheckPopup() {
             </div>
         </div>
     `;
+    }
+    
 }
 
 function nextMemoryCheckPopup() {
